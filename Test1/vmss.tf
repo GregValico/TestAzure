@@ -65,13 +65,13 @@ resource "azurerm_lb_rule" "lbnatrule" {
    protocol                       = "Tcp"
    frontend_port                  = var.application_port
    backend_port                   = var.application_port
-   backend_address_pool_ids        = azurerm_lb_backend_address_pool.bpepool.id
+   backend_address_pool_ids       = ["azurerm_lb_backend_address_pool.bpepool.id"]
    frontend_ip_configuration_name = "PublicIPAddress"
    probe_id                       = azurerm_lb_probe.vmss.id
 }
 
-resource "azurerm_virtual_machine_scale_set" "vmss" {
- name                = var.azurerm_virtual_machine_scale_set
+resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
+ name                = var.azurerm_linux_virtual_machine_scale_set
  location            = var.location
  resource_group_name = azurerm_resource_group.vmss.name
  upgrade_policy_mode = "Manual"
@@ -150,7 +150,7 @@ resource "azurerm_monitor_autoscale_setting" "vmss" {
   name                = "AutoscaleSetting"
   resource_group_name = azurerm_resource_group.vmss.name
   location            = azurerm_resource_group.vmss.location
-  target_resource_id  = azurerm_virtual_machine_scale_set.vmss.id
+  target_resource_id  = azurerm_linux_virtual_machine_scale_set.vmss.id
 
   profile {
     name = "defaultProfile"
@@ -164,7 +164,7 @@ resource "azurerm_monitor_autoscale_setting" "vmss" {
     rule {
       metric_trigger {
         metric_name        = "Percentage CPU"
-        metric_resource_id = azurerm_virtual_machine_scale_set.vmss.id
+        metric_resource_id = azurerm_linux_virtual_machine_scale_set.vmss.id
         time_grain         = "PT1M"
         statistic          = "Average"
         time_window        = "PT5M"
@@ -190,7 +190,7 @@ resource "azurerm_monitor_autoscale_setting" "vmss" {
     rule {
       metric_trigger {
         metric_name        = "Percentage CPU"
-        metric_resource_id = azurerm_virtual_machine_scale_set.vmss.id
+        metric_resource_id = azurerm_linux_virtual_machine_scale_set.vmss.id
         time_grain         = "PT1M"
         statistic          = "Average"
         time_window        = "PT5M"
