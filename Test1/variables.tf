@@ -36,7 +36,7 @@ variable "azurerm_virtual_network" {
  type = string
 }
 
-variable "azurerm_virtual_machine_scale_set" {
+variable "azurerm_linux_virtual_machine_scale_set" {
  description = "The name of the virtual network in which the resources will be created"
  default     = "VMScaleSet"
  type = string
