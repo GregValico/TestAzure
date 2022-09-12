@@ -8,7 +8,7 @@ resource "random_string" "fqdn" {
  length  = 6
  special = false
  upper   = false
- number  = false
+ numeric  = false
 }
 
 resource "azurerm_virtual_network" "vmss" {
@@ -23,7 +23,7 @@ resource "azurerm_subnet" "vmss" {
  name                 = "vmss-subnet"
  resource_group_name  = azurerm_resource_group.vmss.name
  virtual_network_name = azurerm_virtual_network.vmss.name
- address_prefix       = "10.0.2.0/24"
+ address_prefixes       = "10.0.2.0/24"
 }
 
 resource "azurerm_public_ip" "vmss" {
@@ -49,13 +49,11 @@ resource "azurerm_lb" "vmss" {
 }
 
 resource "azurerm_lb_backend_address_pool" "bpepool" {
- resource_group_name = azurerm_resource_group.vmss.name
  loadbalancer_id     = azurerm_lb.vmss.id
  name                = "BackEndAddressPool"
 }
 
 resource "azurerm_lb_probe" "vmss" {
- resource_group_name = azurerm_resource_group.vmss.name
  loadbalancer_id     = azurerm_lb.vmss.id
  name                = "ssh-running-probe"
  port                = var.application_port
